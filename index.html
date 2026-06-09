@@ -640,12 +640,138 @@
       margin: 28px 0;
     }
 
+    /* ── Step indicator ── */
+    .step-indicator {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 24px;
+    }
+    .step-dot {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--border); color: var(--text3);
+      font-size: 0.85rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.2s, color 0.2s;
+    }
+    .step-dot.active { background: var(--red); color: #fff; }
+    .step-dot.done { background: var(--blue); color: #fff; }
+    .step-line { flex: 1; max-width: 80px; height: 2px; background: var(--border); }
+
+    /* ── Step 1: editable outline ── */
+    .edit-section-block {
+      border: 1.5px solid var(--border); border-radius: 10px;
+      overflow: visible; margin-bottom: 12px;
+    }
+    .edit-section-head {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px; background: var(--surface2);
+      border-bottom: 1px solid var(--border); border-radius: 10px 10px 0 0;
+    }
+    .edit-section-body { padding: 14px 16px; background: var(--surface); border-radius: 0 0 10px 10px; }
+    .edit-field-label {
+      font-size: 0.72rem; font-weight: 700; color: var(--text3);
+      margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .edit-starter-wrap { margin-bottom: 12px; }
+    .edit-points-wrap { display: flex; flex-direction: column; gap: 6px; }
+    .edit-point-row { display: flex; gap: 8px; align-items: flex-start; }
+    .point-idx { color: var(--blue); font-size: 0.9rem; font-weight: 700; padding-top: 8px; flex-shrink: 0; width: 14px; }
+
+    /* LCD A-E editable */
+    .edit-lcd-block {
+      background: var(--blue-light); border: 1.5px solid var(--blue-mid);
+      border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;
+    }
+    .edit-lcd-title-row { margin-bottom: 10px; }
+    .edit-abcde-row {
+      display: grid; grid-template-columns: 42px 1fr;
+      gap: 8px; align-items: flex-start; margin-bottom: 6px;
+    }
+    .abcde-check-label {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; padding-top: 6px; cursor: pointer;
+    }
+    .abcde-key { font-size: 0.78rem; font-weight: 700; color: var(--red); line-height: 1; }
+    .abcde-check-label input[type="checkbox"] {
+      width: 17px; height: 17px; accent-color: var(--red); cursor: pointer;
+    }
+    .abcde-content { flex: 1; }
+
+    /* Section 6 referral edit */
+    .edit-ref-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 8px; }
+
+    /* ── Step 2: slide cards ── */
+    .slides-wrap { display: flex; flex-direction: column; gap: 14px; }
+    .slide-card {
+      background: var(--surface); border: 1.5px solid var(--border);
+      border-radius: 12px; padding: 18px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06); position: relative;
+    }
+    .slide-card.type-normal { border-top: 3px solid var(--red); }
+    .slide-card.type-lcd-abcd { border-top: 3px solid var(--blue); }
+    .slide-card.type-lcd-story { border-top: 3px solid var(--red-dark); }
+    .slide-card.type-referral { border-top: 3px solid #7b2fbe; }
+    .slide-num {
+      position: absolute; top: 14px; right: 16px;
+      font-size: 0.72rem; color: var(--text3); font-weight: 600;
+    }
+    .slide-section-tag {
+      font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text3); margin-bottom: 8px;
+    }
+    [contenteditable] {
+      outline: none; border-radius: 4px;
+      transition: background 0.1s, box-shadow 0.1s; min-height: 1.2em;
+    }
+    [contenteditable]:focus {
+      background: var(--surface2);
+      box-shadow: 0 0 0 2px rgba(74,175,232,0.25);
+    }
+    .slide-title-edit {
+      font-size: 1.05rem; font-weight: 700; color: var(--text);
+      margin-bottom: 10px; padding: 3px 6px; border-radius: 4px;
+    }
+    .slide-starter-edit {
+      font-size: 0.85rem; color: var(--text2); font-style: italic;
+      border-left: 3px solid var(--red); padding: 6px 10px;
+      background: var(--red-light); border-radius: 0 6px 6px 0; margin-bottom: 10px;
+    }
+    .slide-points-edit { display: flex; flex-direction: column; gap: 5px; }
+    .slide-point-row { display: flex; gap: 8px; align-items: flex-start; }
+    .slide-point-dot { color: var(--blue); font-size: 0.7rem; flex-shrink: 0; padding-top: 5px; }
+    .slide-items-edit { display: flex; flex-direction: column; gap: 6px; }
+    .slide-item-row { display: grid; grid-template-columns: 28px 1fr; gap: 8px; align-items: flex-start; }
+    .slide-item-key { font-size: 0.78rem; font-weight: 700; color: var(--red); padding-top: 3px; }
+    .slide-item-val { font-size: 0.88rem; color: var(--text2); padding: 2px 6px; line-height: 1.55; }
+    .slide-story-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    .slide-story-item { background: var(--surface2); border-radius: 8px; padding: 10px 12px; }
+    .slide-story-label { font-size: 0.68rem; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .slide-ref-tiers { display: flex; flex-direction: column; gap: 7px; margin-top: 8px; }
+    .slide-ref-row { display: flex; gap: 10px; align-items: flex-start; }
+
+    /* ── Step nav ── */
+    .step-nav { display: flex; gap: 12px; margin-top: 20px; justify-content: flex-end; flex-wrap: wrap; }
+    .btn-step-back {
+      padding: 11px 22px; background: var(--surface2);
+      border: 1.5px solid var(--border); color: var(--text2);
+      border-radius: 8px; font-size: 0.92rem; font-weight: 600;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-step-back:hover { background: var(--border); }
+    .btn-step-next {
+      padding: 11px 26px; background: var(--red); border: none;
+      color: #fff; border-radius: 8px; font-size: 0.92rem; font-weight: 700;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-step-next:hover { background: var(--red-dark); }
+
     /* ── Responsive ── */
     @media (max-width: 620px) {
       .form-grid { grid-template-columns: 1fr; }
       .fg-full { grid-column: 1; }
       .referral-grid { grid-template-columns: 1fr; }
       .hero h1 { font-size: 1.4rem; }
+      .edit-ref-grid { grid-template-columns: 1fr; }
+      .slide-story-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -831,36 +957,58 @@
   <!-- 輸出區 -->
   <div class="output-wrap" id="outputWrap">
     <div class="divider"></div>
-    <div class="tabs">
-      <button type="button" class="tab active" role="tab" aria-selected="true" aria-controls="tab-outline" onclick="switchTab('outline')">架構預覽</button>
-      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="tab-ppt" onclick="switchTab('ppt')">PPT 提示詞</button>
+
+    <!-- Step indicator -->
+    <div class="step-indicator">
+      <div class="step-dot" id="stepDot1">1</div>
+      <div class="step-line"></div>
+      <div class="step-dot" id="stepDot2">2</div>
+      <div class="step-line"></div>
+      <div class="step-dot" id="stepDot3">3</div>
     </div>
-    <div class="card" style="border-radius: 0 12px 12px 12px; margin-bottom: 0; border-top: none;">
 
-      <div class="tab-panel active" id="tab-outline">
-        <div class="meta-row" id="metaRow"></div>
-        <div id="sectionsList"></div>
+    <!-- Step 1: 確認並編輯架構 -->
+    <div id="step1Panel" style="display:none">
+      <div class="section-label red">步驟一：確認並編輯架構內容</div>
+      <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;">所有欄位皆可直接修改。LCD A-E 勾選要帶入投影片的項目，E（成功案例故事）勾選後會產生獨立故事投影片。</p>
+      <div id="step1Content"></div>
+      <div class="step-nav">
+        <button type="button" class="btn-step-next" onclick="goToStep2()">進入 PPT 投影片預覽 ›</button>
       </div>
-
-      <div class="tab-panel" id="tab-ppt">
-        <div class="ppt-intro">
-          以下提示詞可直接複製，貼入 <strong>ChatGPT</strong> 或 <strong>Gemini</strong>，讓 AI 依據你的簡報架構產出投影片大綱與口說建議。
-        </div>
-        <div class="ppt-prompt-box" id="pptPromptBox"></div>
-        <div class="copy-bar">
-          <button type="button" class="btn-copy" id="copyPptBtn" onclick="copyPpt()">複製提示詞</button>
-        </div>
-      </div>
-
     </div>
+
+    <!-- Step 2: 預覽並編輯投影片 -->
+    <div id="step2Panel" style="display:none">
+      <div class="section-label blue">步驟二：預覽並編輯每張投影片</div>
+      <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;">點擊任何文字區域可直接編輯內容，完成後點「產出 PPT 提示詞」。</p>
+      <div class="slides-wrap" id="step2Content"></div>
+      <div class="step-nav">
+        <button type="button" class="btn-step-back" onclick="backToStep1()">‹ 返回架構編輯</button>
+        <button type="button" class="btn-step-next" onclick="goToStep3()">產出 PPT 提示詞 ›</button>
+      </div>
+    </div>
+
+    <!-- Step 3: PPT 提示詞 -->
+    <div id="step3Panel" style="display:none">
+      <div class="section-label red">步驟三：PPT 製作提示詞</div>
+      <div class="ppt-intro">以下提示詞已根據你編輯後的投影片內容產出，可直接複製貼入 <strong>ChatGPT</strong> 或 <strong>Gemini</strong>。</div>
+      <div class="ppt-prompt-box" id="pptPromptBox"></div>
+      <div class="step-nav">
+        <button type="button" class="btn-step-back" onclick="backToStep2()">‹ 返回投影片預覽</button>
+        <button type="button" class="btn-copy" id="copyPptBtn" onclick="copyPpt()">複製提示詞</button>
+      </div>
+    </div>
+
   </div>
 
 </div><!-- /main -->
 
 <script>
-let lastParsed = null;
+let editState = null;
+let slideState = [];
 let lastPptPrompt = '';
 const API_KEY_STORAGE = 'bni_gemini_key';
+const LCD_LABELS = { A:'產品或服務', B:'客戶效益', C:'交易引薦對象', D:'業務人脈圈', E:'成功案例故事' };
 
 const suggestionSchema = {
   type: 'object',
@@ -971,14 +1119,12 @@ function clearSavedKey() {
   document.getElementById('apiKey').focus();
 }
 
-function switchTab(tab) {
-  document.querySelectorAll('.tab').forEach((t, i) => {
-    const isActive = ['outline','ppt'][i] === tab;
-    t.classList.toggle('active', isActive);
-    t.setAttribute('aria-selected', String(isActive));
+function showStep(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById('step' + i + 'Panel').style.display = i === n ? 'block' : 'none';
+    const dot = document.getElementById('stepDot' + i);
+    dot.className = 'step-dot' + (i === n ? ' active' : (i < n ? ' done' : ''));
   });
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
 }
 
 function setStatus(id, type, msg) {
@@ -1189,10 +1335,15 @@ async function generate() {
       { schema: outlineSchema, thinkingBudget: 8192, timeoutMs: 90000 }
     );
     const parsed = validateOutline(parseJson(raw));
-    lastParsed = parsed;
-    lastPptPrompt = buildPptPrompt(parsed, { name, industry, topic });
-    renderOutline(parsed);
-    document.getElementById('pptPromptBox').textContent = lastPptPrompt;
+
+    // Build editState with default checks (all true)
+    editState = JSON.parse(JSON.stringify(parsed));
+    editState.sections[3].lcd.forEach(l => {
+      l.checks = { A: true, B: true, C: true, D: true, E: true };
+    });
+
+    renderStep1();
+    showStep(1);
     document.getElementById('outputWrap').classList.add('show');
     clearStatus('mainStatus');
     document.getElementById('outputWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1263,46 +1414,280 @@ E. 成功案例故事（含稀好事細節，說故事語氣，有數字或具�
 只回傳 JSON，不要加任何額外說明。`;
 }
 
-function buildPptPrompt(parsed, { name, industry, topic }) {
-  const s = parsed.sections || [];
-  const sections = s.map(sec => {
-    if (sec.number === 4 && sec.lcd) {
-      const lcds = sec.lcd.map(l =>
-        `  LCD${l.id}：${l.title}（${l.time}）\n` +
-        `    A. 產品或服務：${l.A}\n` +
-        `    B. 客戶效益：${l.B}\n` +
-        `    C. 交易引薦對象：${l.C}\n` +
-        `    D. 業務人脈圈：${l.D}\n` +
-        `    E. 成功案例故事：${l.E}`
-      ).join('\n');
-      return `【${sec.number}】${sec.name}（${sec.time}）\n  開場話術：「${sec.starter}」\n${lcds}`;
+/* ── Step 1: render editable outline ── */
+function renderStep1() {
+  let html = '';
+  for (const s of editState.sections) {
+    html += `<div class="edit-section-block">
+      <div class="edit-section-head">
+        <div class="s-num">${s.number}</div>
+        <div class="s-title">${esc(s.name)}</div>
+        <div class="s-time">${esc(s.time)}</div>
+      </div>
+      <div class="edit-section-body">`;
+
+    // Starter
+    html += `<div class="edit-starter-wrap">
+      <div class="edit-field-label">開場話術</div>
+      <textarea data-sec="${s.number}" data-field="starter" rows="2">${esc(s.starter || '')}</textarea>
+    </div>`;
+
+    if (s.number === 4) {
+      for (const l of s.lcd) {
+        html += `<div class="edit-lcd-block">
+          <div class="edit-lcd-title-row">
+            <div class="edit-field-label">LCD${l.id} 標題</div>
+            <input type="text" data-lcd="${l.id}" data-field="title" value="${esc(l.title)}" />
+          </div>`;
+        for (const k of ['A','B','C','D','E']) {
+          const chk = l.checks[k] ? 'checked' : '';
+          html += `<div class="edit-abcde-row">
+            <label class="abcde-check-label" title="勾選後帶入 PPT 預覽">
+              <span class="abcde-key">${k}</span>
+              <input type="checkbox" data-lcd="${l.id}" data-item="${k}" ${chk} />
+            </label>
+            <div class="abcde-content">
+              <div class="edit-field-label">${LCD_LABELS[k]}</div>
+              <textarea data-lcd="${l.id}" data-field="${k}" rows="2">${esc(l[k] || '')}</textarea>
+            </div>
+          </div>`;
+        }
+        html += `</div>`;
+      }
+    } else if (s.number === 6) {
+      const r = s.referrals || {};
+      html += `<div class="edit-ref-grid">
+        <div>
+          <div class="edit-field-label" style="color:#7b2fbe">夢幻引薦</div>
+          <textarea data-sec="6" data-field="dream" rows="3">${esc(r.dream || '')}</textarea>
+        </div>
+        <div>
+          <div class="edit-field-label" style="color:#166534">理想引薦</div>
+          <textarea data-sec="6" data-field="ideal" rows="3">${esc(r.ideal || '')}</textarea>
+        </div>
+        <div>
+          <div class="edit-field-label" style="color:#1d4ed8">一般引薦</div>
+          <textarea data-sec="6" data-field="general" rows="3">${esc(r.general || '')}</textarea>
+        </div>
+      </div>`;
+    } else {
+      html += `<div class="edit-points-wrap"><div class="edit-field-label">要點</div>`;
+      (s.points || []).forEach((p, i) => {
+        html += `<div class="edit-point-row">
+          <span class="point-idx">·</span>
+          <textarea data-sec="${s.number}" data-point="${i}" rows="2">${esc(p)}</textarea>
+        </div>`;
+      });
+      html += `</div>`;
     }
-    if (sec.number === 6 && sec.referrals) {
-      return `【${sec.number}】${sec.name}（${sec.time}）\n  開場話術：「${sec.starter}」\n  夢幻引薦：${sec.referrals.dream}\n  理想引薦：${sec.referrals.ideal}\n  一般引薦：${sec.referrals.general}`;
+
+    html += `</div></div>`;
+  }
+  document.getElementById('step1Content').innerHTML = html;
+}
+
+function collectStep1() {
+  const c = document.getElementById('step1Content');
+  c.querySelectorAll('textarea[data-sec][data-field="starter"]').forEach(el => {
+    const sec = editState.sections.find(s => s.number === +el.dataset.sec);
+    if (sec) sec.starter = el.value.trim();
+  });
+  c.querySelectorAll('textarea[data-sec][data-point]').forEach(el => {
+    const sec = editState.sections.find(s => s.number === +el.dataset.sec);
+    if (sec && sec.points) sec.points[+el.dataset.point] = el.value.trim();
+  });
+  c.querySelectorAll('input[data-lcd][data-field="title"]').forEach(el => {
+    const lcd = editState.sections[3].lcd.find(l => l.id === +el.dataset.lcd);
+    if (lcd) lcd.title = el.value.trim();
+  });
+  c.querySelectorAll('textarea[data-lcd][data-field]').forEach(el => {
+    const lcd = editState.sections[3].lcd.find(l => l.id === +el.dataset.lcd);
+    if (lcd) lcd[el.dataset.field] = el.value.trim();
+  });
+  c.querySelectorAll('input[type="checkbox"][data-lcd][data-item]').forEach(el => {
+    const lcd = editState.sections[3].lcd.find(l => l.id === +el.dataset.lcd);
+    if (lcd) lcd.checks[el.dataset.item] = el.checked;
+  });
+  ['dream','ideal','general'].forEach(key => {
+    const el = c.querySelector(`textarea[data-sec="6"][data-field="${key}"]`);
+    if (el) editState.sections[5].referrals[key] = el.value.trim();
+  });
+  const s6starter = c.querySelector('textarea[data-sec="6"][data-field="starter"]');
+  if (s6starter) editState.sections[5].starter = s6starter.value.trim();
+}
+
+/* ── Build slides from editState ── */
+function buildSlides() {
+  slideState = [];
+  for (const sec of editState.sections) {
+    if (sec.number === 4) {
+      for (const lcd of sec.lcd) {
+        const abcdKeys = ['A','B','C','D'].filter(k => lcd.checks[k]);
+        if (abcdKeys.length > 0) {
+          const items = {};
+          abcdKeys.forEach(k => { items[k] = lcd[k]; });
+          slideState.push({ type:'lcd-abcd', sectionNum:4, lcdId:lcd.id, lcdTitle:lcd.title, items });
+        }
+        if (lcd.checks.E) {
+          slideState.push({ type:'lcd-story', sectionNum:4, lcdId:lcd.id, lcdTitle:lcd.title,
+            story:{ scene: lcd.E, challenge:'', solution:'', result:'' } });
+        }
+      }
+    } else if (sec.number === 6) {
+      slideState.push({ type:'referral', sectionNum:6, sectionName:sec.name, sectionTime:sec.time,
+        starter:sec.starter, dream:sec.referrals.dream, ideal:sec.referrals.ideal, general:sec.referrals.general });
+    } else {
+      slideState.push({ type:'normal', sectionNum:sec.number, sectionName:sec.name,
+        sectionTime:sec.time, starter:sec.starter, points:[...(sec.points||[])] });
     }
-    const pts = (sec.points || []).map(p => `  - ${p}`).join('\n');
-    return `【${sec.number}】${sec.name}（${sec.time}）\n  開場話術：「${sec.starter}」\n${pts}`;
-  }).join('\n\n');
+  }
+}
+
+/* ── Step 2: render slide cards ── */
+function renderStep2() {
+  let html = '';
+  slideState.forEach((slide, idx) => {
+    const num = idx + 1;
+    if (slide.type === 'normal') {
+      const pts = (slide.points || []).map((p, i) =>
+        `<div class="slide-point-row">
+          <span class="slide-point-dot">&#9632;</span>
+          <div class="slide-item-val" contenteditable="true" data-slide="${idx}" data-field="points.${i}">${esc(p)}</div>
+        </div>`).join('');
+      html += `<div class="slide-card type-normal">
+        <div class="slide-num">投影片 ${num}</div>
+        <div class="slide-section-tag">【${slide.sectionNum}】${esc(slide.sectionName)} · ${esc(slide.sectionTime)}</div>
+        <div class="slide-title-edit" contenteditable="true" data-slide="${idx}" data-field="sectionName">${esc(slide.sectionName)}</div>
+        <div class="slide-starter-edit" contenteditable="true" data-slide="${idx}" data-field="starter">${esc(slide.starter)}</div>
+        <div class="slide-points-edit">${pts}</div>
+      </div>`;
+    } else if (slide.type === 'lcd-abcd') {
+      const items = Object.entries(slide.items || {}).map(([k,v]) =>
+        `<div class="slide-item-row">
+          <div class="slide-item-key">${k}.</div>
+          <div class="slide-item-val" contenteditable="true" data-slide="${idx}" data-field="items.${k}">${esc(v)}</div>
+        </div>`).join('');
+      html += `<div class="slide-card type-lcd-abcd">
+        <div class="slide-num">投影片 ${num}</div>
+        <div class="slide-section-tag">【4】LCD${slide.lcdId} 成功案例</div>
+        <div class="slide-title-edit" contenteditable="true" data-slide="${idx}" data-field="lcdTitle">${esc(slide.lcdTitle)}</div>
+        <div class="slide-items-edit">${items}</div>
+      </div>`;
+    } else if (slide.type === 'lcd-story') {
+      const labels = { scene:'情境', challenge:'挑戰', solution:'解法', result:'結果' };
+      const cells = Object.keys(labels).map(k =>
+        `<div class="slide-story-item">
+          <div class="slide-story-label">${labels[k]}</div>
+          <div contenteditable="true" data-slide="${idx}" data-field="story.${k}" style="font-size:0.86rem;color:var(--text2);min-height:40px;padding:3px 4px;">${esc((slide.story||{})[k]||'')}</div>
+        </div>`).join('');
+      html += `<div class="slide-card type-lcd-story">
+        <div class="slide-num">投影片 ${num}</div>
+        <div class="slide-section-tag">【4】LCD${slide.lcdId} 成功案例故事</div>
+        <div class="slide-title-edit" contenteditable="true" data-slide="${idx}" data-field="lcdTitle">${esc(slide.lcdTitle)} — 案例故事</div>
+        <div class="slide-story-grid">${cells}</div>
+      </div>`;
+    } else if (slide.type === 'referral') {
+      html += `<div class="slide-card type-referral">
+        <div class="slide-num">投影片 ${num}</div>
+        <div class="slide-section-tag">【6】${esc(slide.sectionName)} · ${esc(slide.sectionTime)}</div>
+        <div class="slide-title-edit" contenteditable="true" data-slide="${idx}" data-field="sectionName">${esc(slide.sectionName)}</div>
+        <div class="slide-starter-edit" contenteditable="true" data-slide="${idx}" data-field="starter">${esc(slide.starter)}</div>
+        <div class="slide-ref-tiers">
+          <div class="slide-ref-row"><span class="tier-label tier-dream">夢幻</span><div class="slide-item-val" contenteditable="true" data-slide="${idx}" data-field="dream">${esc(slide.dream)}</div></div>
+          <div class="slide-ref-row"><span class="tier-label tier-ideal">理想</span><div class="slide-item-val" contenteditable="true" data-slide="${idx}" data-field="ideal">${esc(slide.ideal)}</div></div>
+          <div class="slide-ref-row"><span class="tier-label tier-gen">一般</span><div class="slide-item-val" contenteditable="true" data-slide="${idx}" data-field="general">${esc(slide.general)}</div></div>
+        </div>
+      </div>`;
+    }
+  });
+  document.getElementById('step2Content').innerHTML = html;
+}
+
+function collectStep2() {
+  document.getElementById('step2Content').querySelectorAll('[contenteditable][data-slide]').forEach(el => {
+    const idx = +el.dataset.slide;
+    const field = el.dataset.field;
+    const val = el.textContent.trim();
+    const slide = slideState[idx];
+    if (!slide) return;
+    if (field.startsWith('points.')) {
+      if (!slide.points) slide.points = [];
+      slide.points[+field.split('.')[1]] = val;
+    } else if (field.startsWith('items.')) {
+      if (!slide.items) slide.items = {};
+      slide.items[field.split('.')[1]] = val;
+    } else if (field.startsWith('story.')) {
+      if (!slide.story) slide.story = {};
+      slide.story[field.split('.')[1]] = val;
+    } else {
+      slide[field] = val;
+    }
+  });
+}
+
+/* ── Step nav ── */
+function goToStep2() {
+  collectStep1();
+  buildSlides();
+  renderStep2();
+  showStep(2);
+  document.getElementById('outputWrap').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function backToStep1() {
+  showStep(1);
+  document.getElementById('outputWrap').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function goToStep3() {
+  collectStep2();
+  lastPptPrompt = buildPptPromptFromSlides();
+  document.getElementById('pptPromptBox').textContent = lastPptPrompt;
+  showStep(3);
+  document.getElementById('outputWrap').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+function backToStep2() {
+  showStep(2);
+  document.getElementById('outputWrap').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+/* ── Build PPT prompt from slideState ── */
+function buildPptPromptFromSlides() {
+  const meta = editState.meta || {};
+  const slideText = slideState.map((slide, idx) => {
+    const num = idx + 1;
+    if (slide.type === 'normal') {
+      const pts = (slide.points||[]).filter(Boolean).map(p => `  - ${p}`).join('\n');
+      return `【投影片 ${num}】${slide.sectionName}（${slide.sectionTime}）\n  開場話術：「${slide.starter}」\n${pts}`;
+    } else if (slide.type === 'lcd-abcd') {
+      const items = Object.entries(slide.items||{}).map(([k,v]) => `  ${k}. ${LCD_LABELS[k]}：${v}`).join('\n');
+      return `【投影片 ${num}】LCD${slide.lcdId} ${slide.lcdTitle}\n${items}`;
+    } else if (slide.type === 'lcd-story') {
+      const s = slide.story || {};
+      return `【投影片 ${num}】LCD${slide.lcdId} ${slide.lcdTitle} — 成功案例故事\n  情境：${s.scene||''}\n  挑戰：${s.challenge||''}\n  解法：${s.solution||''}\n  結果：${s.result||''}`;
+    } else if (slide.type === 'referral') {
+      return `【投影片 ${num}】三級引薦\n  開場話術：「${slide.starter}」\n  夢幻引薦：${slide.dream}\n  理想引薦：${slide.ideal}\n  一般引薦：${slide.general}`;
+    }
+    return '';
+  }).filter(Boolean).join('\n\n');
 
   return `請根據以下 BNI 主題簡報架構，協助我製作一份投影片大綱。
 
-簡報者：${name || '（未填）'} | 行業：${industry || '（未填）'} | 主題：${topic}
-總時長：10 分鐘 | 共 7 個段落
+簡報者：${meta.name||'（未填）'} | 行業：${meta.industry||'（未填）'} | 主題：${meta.topic||'（未填）'}
+總時長：10 分鐘 | 共 ${slideState.length} 張投影片
 
 ---
-架構內容：
+投影片內容：
 
-${sections}
+${slideText}
 
 ---
 
 請依上述架構，完成以下工作：
 
-1. 為每個段落設計 1-2 張投影片，說明每張投影片的標題與核心視覺重點
-2. LCD 的 E（成功案例故事）設計成故事型投影片，建議用「情境 → 挑戰 → 解法 → 結果」四格結構
-3. 三級引薦段落建議製作成三角形或三欄式版面
-4. 每張投影片標注建議的口說重點（1-2 句，給簡報者參考）
-5. 最後列出完整的投影片清單（共幾張、每張標題）
+1. 為每張投影片設計視覺版面配置（標題、核心重點、建議圖表或圖示）
+2. LCD 成功案例故事投影片採「情境 → 挑戰 → 解法 → 結果」四格版面
+3. 三級引薦建議製作成三欄或三角形版面
+4. 每張投影片標注建議的口說重點（1-2 句）
+5. 最後列出完整的投影片清單
 
 風格要求：
 - 簡潔專業，適合 BNI 商務場合
@@ -1310,56 +1695,6 @@ ${sections}
 - 視覺建議可描述版面配置（例如：左圖右文、全版圖、三欄）
 
 請用繁體中文回覆。`;
-}
-
-function renderOutline(parsed) {
-  const meta = parsed.meta || {};
-  document.getElementById('metaRow').innerHTML = [
-    meta.name ? `<span class="meta-chip"><strong>${esc(meta.name)}</strong></span>` : '',
-    meta.industry ? `<span class="meta-chip">${esc(meta.industry)}</span>` : '',
-    meta.topic ? `<span class="meta-chip">主題：<strong>${esc(meta.topic)}</strong></span>` : '',
-    `<span class="meta-chip">總時長：<strong>10 分鐘</strong></span>`
-  ].filter(Boolean).join('');
-  document.getElementById('sectionsList').innerHTML = (parsed.sections || []).map(renderSection).join('');
-}
-
-function renderSection(s) {
-  let body = '';
-  if (s.starter) body += `<div class="starter-quote">"${esc(s.starter)}"</div>`;
-
-  if (s.number === 4 && s.lcd) {
-    body += `<div class="lcd-blocks">${s.lcd.map(l => `
-      <div class="lcd-block">
-        <div class="lcd-block-title"><span class="lcd-tag">LCD${l.id}</span>${esc(l.title)} — ${esc(l.time)}</div>
-        <div class="lcd-abcde">
-          ${['A','B','C','D','E'].map(k => `
-            <div class="lcd-item">
-              <span class="lcd-item-key">${k}.</span>
-              <span class="lcd-item-val">${esc(l[k] || '')}</span>
-            </div>`).join('')}
-        </div>
-      </div>`).join('')}</div>`;
-  } else if (s.number === 6 && s.referrals) {
-    const r = s.referrals;
-    body += `<div class="referral-tiers">
-      <div class="referral-tier"><span class="tier-label tier-dream">夢幻</span><span class="tier-content">${esc(r.dream)}</span></div>
-      <div class="referral-tier"><span class="tier-label tier-ideal">理想</span><span class="tier-content">${esc(r.ideal)}</span></div>
-      <div class="referral-tier"><span class="tier-label tier-gen">一般</span><span class="tier-content">${esc(r.general)}</span></div>
-    </div>`;
-  } else if (s.points?.length) {
-    body += `<div class="points">${s.points.map(p =>
-      `<div class="point"><span class="point-dot">&#9632;</span><span>${esc(p)}</span></div>`
-    ).join('')}</div>`;
-  }
-
-  return `<div class="section-block">
-    <div class="section-head">
-      <div class="s-num">${s.number}</div>
-      <div class="s-title">${esc(s.name)}</div>
-      <div class="s-time">${esc(s.time)}</div>
-    </div>
-    <div class="section-body">${body}</div>
-  </div>`;
 }
 
 function esc(str) {
