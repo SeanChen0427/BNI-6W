@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BNI 富聯 主題簡報產生器</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #E31837;
+      --red-dark: #b8102a;
+      --red-light: #fce8eb;
+      --red-mid: #f5c0c8;
+      --blue: #4AAFE8;
+      --blue-dark: #2b8cc4;
+      --blue-light: #e8f5fd;
+      --blue-mid: #b8ddf5;
+      --bg: #f5f6f8;
+      --surface: #ffffff;
+      --surface2: #f0f2f5;
+      --border: #e0e3e8;
+      --border2: #c8cdd6;
+      --text: #1a1d24;
+      --text2: #4a5060;
+      --text3: #8890a0;
+      --error: #c0392b;
+      --error-bg: #fdf0ef;
+    }
+
+    body {
+      font-family: 'Helvetica Neue', Arial, 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      background: var(--red);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 52px;
+    }
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+    .topbar-brand .dot {
+      width: 8px; height: 8px;
+      background: #fff;
+      border-radius: 50%;
+      opacity: 0.6;
+    }
+    .topbar-sub {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.7);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, var(--red) 0%, #c0102a 55%, #8a0018 100%);
+      padding: 36px 24px 32px;
+      text-align: center;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 220px; height: 220px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -30px;
+      width: 180px; height: 180px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
+    }
+    .hero p {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      color: rgba(255,255,255,0.82);
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badges {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.76rem;
+      color: #fff;
+      letter-spacing: 0.05em;
+    }
+    .hero-badge.blue {
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    /* ── Flowchart image ── */
+    .flowchart-wrap {
+      background: var(--surface);
+      border-bottom: 3px solid var(--blue);
+      padding: 24px;
+    }
+    .flowchart-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--blue-dark);
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .flowchart-label::before {
+      content: '';
+      width: 4px; height: 14px;
+      background: var(--blue);
+      border-radius: 2px;
+    }
+    .flowchart-img {
+      width: 100%;
+      max-width: 860px;
+      max-height: 420px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      cursor: pointer;
+    }
+
+    /* ── Main layout ── */
+    .main { max-width: 900px; margin: 0 auto; padding: 28px 20px 60px; }
+
+    /* ── Section title ── */
+    .section-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.13em;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label.red { color: var(--red); }
+    .section-label.blue { color: var(--blue-dark); }
+    .section-label::before {
+      content: '';
+      width: 4px; height: 14px;
+      border-radius: 2px;
+    }
+    .section-label.red::before { background: var(--red); }
+    .section-label.blue::before { background: var(--blue); }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 22px 24px;
+      margin-bottom: 18px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    .card.blue-accent { border-top: 3px solid var(--blue); }
+    .card.red-accent { border-top: 3px solid var(--red); }
+
+    /* ── Form ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .fg-full { grid-column: 1 / -1; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    label { font-size: 0.8rem; color: var(--text2); font-weight: 600; }
+    label span.req { color: var(--red); margin-left: 2px; }
+
+    input[type="text"], textarea, select {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.92rem;
+      padding: 9px 13px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(74,175,232,0.15);
+      background: #fff;
+    }
+    textarea { resize: vertical; min-height: 72px; }
+    ::placeholder { color: var(--text3); }
+
+    /* ── API Key help ── */
+    .api-help-toggle {
+      border: none;
+      padding: 0;
+      background: transparent;
+      font-family: inherit;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--blue-dark);
+      cursor: pointer;
+      width: fit-content;
+      user-select: none;
+      font-weight: 600;
+    }
+    .api-help-toggle:hover { text-decoration: underline; }
+    .api-help-arrow { font-size: 0.65rem; transition: transform 0.2s; }
+    .api-help-arrow.open { transform: rotate(90deg); }
+
+    .api-help-box {
+      display: none;
+      margin-top: 14px;
+      background: var(--blue-light);
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 10px;
+      padding: 18px 20px;
+    }
+    .api-help-box.show { display: block; }
+    .api-help-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 14px;
+    }
+    .api-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .api-step { display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: flex-start; }
+    .step-num {
+      width: 24px; height: 24px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step-text { font-size: 0.84rem; color: var(--text2); line-height: 1.55; }
+    .step-text strong { color: var(--text); }
+    .step-text code {
+      background: rgba(74,175,232,0.15);
+      border: 1px solid var(--blue-mid);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 0.8rem;
+      color: var(--blue-dark);
+      font-family: monospace;
+    }
+    .btn-goto-aistudio {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 9px 18px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-goto-aistudio:hover { background: var(--blue-dark); }
+    .api-note { margin-top: 10px; font-size: 0.75rem; color: var(--text3); }
+
+    /* ── LCD ── */
+    .lcd-group {
+      background: var(--blue-light);
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .lcd-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .lcd-label { font-size: 0.8rem; color: var(--blue-dark); font-weight: 700; }
+    .btn-ai-suggest {
+      background: var(--blue);
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-ai-suggest:hover { background: var(--blue-dark); }
+    .btn-ai-suggest:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .lcd-row { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; }
+    .lcd-num {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Referral fields ── */
+    .referral-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .referral-field { display: flex; flex-direction: column; gap: 5px; }
+    .ref-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      width: fit-content;
+      margin-bottom: 2px;
+    }
+    .ref-dream { background: #f0e6fa; color: #7b2fbe; border: 1px solid #d8b4fe; }
+    .ref-ideal { background: #e6f7ec; color: #166534; border: 1px solid #86efac; }
+    .ref-gen   { background: #e6f0fa; color: #1d4ed8; border: 1px solid #93c5fd; }
+
+    /* ── Buttons ── */
+    .btn-icon {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      color: var(--text2);
+      border-radius: 8px;
+      padding: 9px 14px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .btn-icon:hover { background: var(--border); }
+    .api-row { display: flex; gap: 8px; }
+    .api-row input { flex: 1; }
+    .api-options {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 9px;
+      flex-wrap: wrap;
+    }
+    .remember-key {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.78rem;
+      color: var(--text2);
+      cursor: pointer;
+    }
+    .remember-key input { accent-color: var(--blue); }
+    .btn-clear-key {
+      border: none;
+      background: transparent;
+      color: var(--text3);
+      font-size: 0.76rem;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+    .btn-clear-key:hover { color: var(--red); }
+
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: background 0.15s;
+    }
+    .btn-generate:hover { background: var(--red-dark); }
+    .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    /* ── Status ── */
+    .status {
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.84rem;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+    .status.show { display: flex; }
+    .status.thinking { background: var(--blue-light); color: var(--blue-dark); border: 1.5px solid var(--blue-mid); }
+    .status.error { background: var(--error-bg); color: var(--error); border: 1.5px solid #f5c0bb; }
+
+    .spinner {
+      width: 14px; height: 14px;
+      border: 2px solid var(--blue-mid);
+      border-top-color: var(--blue);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      flex-shrink: 0;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Output ── */
+    .output-wrap { display: none; }
+    .output-wrap.show { display: block; }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: -1px;
+    }
+    .tab {
+      padding: 10px 22px;
+      border: 1.5px solid var(--border);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      background: var(--surface2);
+      color: var(--text3);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      margin-right: 4px;
+    }
+    .tab.active {
+      background: var(--surface);
+      color: var(--red);
+      border-color: var(--border);
+      border-bottom-color: var(--surface);
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Outline view ── */
+    .meta-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+    .meta-chip {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      color: var(--text2);
+    }
+    .meta-chip strong { color: var(--text); }
+
+    .section-block {
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 16px;
+      background: var(--surface2);
+      border-bottom: 1px solid var(--border);
+    }
+    .s-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--red);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .s-title { font-weight: 700; font-size: 0.95rem; flex: 1; color: var(--text); }
+    .s-time {
+      font-size: 0.74rem;
+      color: var(--blue-dark);
+      background: var(--blue-light);
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 5px;
+      padding: 2px 10px;
+      font-weight: 600;
+    }
+    .section-body { padding: 14px 16px; background: var(--surface); }
+
+    .starter-quote {
+      border-left: 3px solid var(--red);
+      padding: 7px 12px;
+      font-size: 0.85rem;
+      color: var(--text2);
+      font-style: italic;
+      margin-bottom: 12px;
+      background: var(--red-light);
+      border-radius: 0 6px 6px 0;
+    }
+    .points { display: flex; flex-direction: column; gap: 5px; }
+    .point { display: flex; gap: 8px; font-size: 0.86rem; color: var(--text2); }
+    .point-dot { color: var(--blue); flex-shrink: 0; font-size: 0.7rem; margin-top: 4px; }
+
+    /* LCD blocks */
+    .lcd-blocks { display: flex; flex-direction: column; gap: 10px; margin-top: 2px; }
+    .lcd-block {
+      background: var(--blue-light);
+      border: 1.5px solid var(--blue-mid);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .lcd-block-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .lcd-tag {
+      background: var(--blue);
+      color: #fff;
+      border-radius: 4px;
+      padding: 1px 8px;
+      font-size: 0.72rem;
+    }
+    .lcd-abcde { display: flex; flex-direction: column; gap: 5px; }
+    .lcd-item { display: grid; grid-template-columns: 22px 1fr; gap: 8px; font-size: 0.84rem; }
+    .lcd-item-key { color: var(--red); font-weight: 700; font-size: 0.78rem; }
+    .lcd-item-val { color: var(--text2); }
+
+    /* Referral tiers output */
+    .referral-tiers { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
+    .referral-tier {
+      display: flex; gap: 10px; align-items: flex-start;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+    .tier-label {
+      font-size: 0.72rem; font-weight: 700;
+      padding: 2px 9px; border-radius: 4px;
+      white-space: nowrap; flex-shrink: 0; margin-top: 1px;
+    }
+    .tier-dream { background: #f0e6fa; color: #7b2fbe; border: 1px solid #d8b4fe; }
+    .tier-ideal { background: #e6f7ec; color: #166534; border: 1px solid #86efac; }
+    .tier-gen   { background: #e6f0fa; color: #1d4ed8; border: 1px solid #93c5fd; }
+    .tier-content { font-size: 0.85rem; color: var(--text2); }
+
+    /* ── PPT prompt tab ── */
+    .ppt-intro {
+      font-size: 0.84rem;
+      color: var(--text2);
+      margin-bottom: 14px;
+      padding: 10px 14px;
+      background: var(--red-light);
+      border: 1.5px solid var(--red-mid);
+      border-radius: 8px;
+    }
+    .ppt-prompt-box {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 0.84rem;
+      color: var(--text2);
+      white-space: pre-wrap;
+      line-height: 1.75;
+      max-height: 520px;
+      overflow-y: auto;
+      font-family: 'Helvetica Neue', Arial, 'PingFang TC', sans-serif;
+    }
+    .copy-bar { display: flex; justify-content: flex-end; margin-top: 12px; }
+    .btn-copy {
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      color: var(--text2);
+      border-radius: 8px;
+      padding: 8px 20px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      font-weight: 600;
+      transition: background 0.15s;
+    }
+    .btn-copy:hover { background: var(--border); }
+    .btn-copy.copied { color: #166534; border-color: #86efac; background: #e6f7ec; }
+
+    /* ── Divider ── */
+    .divider {
+      height: 3px;
+      background: linear-gradient(90deg, var(--red) 0%, var(--blue) 100%);
+      border-radius: 2px;
+      margin: 28px 0;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 620px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .fg-full { grid-column: 1; }
+      .referral-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <span>BNI</span>
+    <span class="dot"></span>
+    <span>富聯分會</span>
+  </div>
+  <div class="topbar-sub">FEATURE PRESENTATION TOOL</div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <h1>主題簡報架構產生器</h1>
+  <p>填入資訊，AI 自動產出七段式架構建議與 PPT 製作提示詞</p>
+  <div class="hero-badges">
+    <span class="hero-badge">富聯分會標準</span>
+    <span class="hero-badge blue">總時長 10 分鐘</span>
+    <span class="hero-badge">Gemini AI 驅動</span>
+  </div>
+</div>
+
+<!-- Flowchart -->
+<div class="flowchart-wrap">
+  <div class="flowchart-label">富聯分會 簡報大綱流程圖</div>
+  <img
+    class="flowchart-img"
+    src="https://i.ibb.co/dsF1z6wh/IMG-1996.jpg"
+    alt="BNI 富聯簡報大綱流程圖"
+    loading="lazy"
+    role="button"
+    tabindex="0"
+    aria-label="放大查看 BNI 富聯簡報大綱流程圖"
+    onclick="openLightbox(this.src)"
+    onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(this.src); }"
+    title="點擊查看大圖"
+  />
+  <div style="text-align:center;margin-top:8px;font-size:0.74rem;color:var(--text3);">點擊圖片可放大查看</div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" role="dialog" aria-modal="true" aria-label="簡報流程圖放大檢視" onclick="closeLightbox()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;align-items:center;justify-content:center;cursor:zoom-out;">
+    <img id="lightboxImg" src="" alt="BNI 富聯簡報大綱流程圖放大版" style="max-width:95vw;max-height:92vh;border-radius:8px;box-shadow:0 8px 40px rgba(0,0,0,0.6);" />
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+
+  <!-- API Key -->
+  <div class="card blue-accent">
+    <div class="section-label blue">API 設定</div>
+    <div class="form-group">
+      <label for="apiKey">Gemini API Key</label>
+      <div class="api-row">
+        <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off" />
+        <button type="button" class="btn-icon" id="toggleKeyBtn" onclick="toggleKey(this)">顯示</button>
+      </div>
+      <div class="api-options">
+        <label class="remember-key" for="rememberKey">
+          <input type="checkbox" id="rememberKey" />
+          記住 API Key（僅限私人裝置）
+        </label>
+        <button type="button" class="btn-clear-key" onclick="clearSavedKey()">清除已儲存 Key</button>
+      </div>
+    </div>
+
+    <button type="button" class="api-help-toggle" id="apiHelpToggle" aria-expanded="false" aria-controls="apiHelpBox" onclick="toggleApiHelp()">
+      <span class="api-help-arrow" id="helpArrow">&#9658;</span>
+      還沒有 API Key？點此查看取得教學（免費，2 分鐘完成）
+    </button>
+
+    <div class="api-help-box" id="apiHelpBox">
+      <div class="api-help-title">如何取得 Gemini API Key</div>
+      <div class="api-steps">
+        <div class="api-step">
+          <div class="step-num">1</div>
+          <div class="step-text">點擊下方按鈕，前往 <strong>Google AI Studio</strong>（需登入 Google 帳號）</div>
+        </div>
+        <div class="api-step">
+          <div class="step-num">2</div>
+          <div class="step-text">登入後，點左側選單的 <strong>「Get API key」</strong>，再點 <strong>「Create API key」</strong></div>
+        </div>
+        <div class="api-step">
+          <div class="step-num">3</div>
+          <div class="step-text">選擇任一專案（或建立新專案），點 <strong>「Create API key in existing project」</strong></div>
+        </div>
+        <div class="api-step">
+          <div class="step-num">4</div>
+          <div class="step-text">畫面出現以 <code>AIza</code> 開頭的金鑰，點旁邊的<strong>複製圖示</strong>複製全段文字</div>
+        </div>
+        <div class="api-step">
+          <div class="step-num">5</div>
+          <div class="step-text">回到此頁面，貼入上方的 <strong>「Gemini API Key」</strong> 欄位；私人裝置可勾選「記住 API Key」</div>
+        </div>
+      </div>
+      <a class="btn-goto-aistudio" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">
+        前往 Google AI Studio 取得 API Key
+      </a>
+      <div class="api-note">API Key 只會傳送至 Google Gemini API。勾選「記住」後才會儲存在此瀏覽器的 localStorage；共用裝置請勿勾選。</div>
+    </div>
+  </div>
+
+  <!-- 簡報者資訊 -->
+  <div class="card red-accent">
+    <div class="section-label red">簡報者資訊</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label for="name">姓名</label>
+        <input type="text" id="name" placeholder="王小明" />
+      </div>
+      <div class="form-group">
+        <label for="industry">行業 / 職業</label>
+        <input type="text" id="industry" placeholder="室內設計師" />
+      </div>
+      <div class="form-group fg-full">
+        <label for="topic">本週主題 <span class="req">*</span></label>
+        <input type="text" id="topic" placeholder="例：如何讓客戶主動回購" />
+      </div>
+      <div class="form-group fg-full">
+        <label for="targetClient">目標客戶輪廓（選填）</label>
+        <input type="text" id="targetClient" placeholder="例：有裝潢需求的首購屋主" />
+      </div>
+      <div class="form-group fg-full">
+        <label for="extra">補充背景（選填）</label>
+        <textarea id="extra" placeholder="例：本週章會方向是「信任」，想強調長期服務關係…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- LCD 案例 -->
+  <div class="card blue-accent">
+    <div class="section-label blue">LCD 成功案例方向（各 2 分鐘）</div>
+    <div class="lcd-group">
+      <div class="lcd-header">
+        <span class="lcd-label">三個成功案例 — 可自填或讓 AI 建議</span>
+        <button type="button" class="btn-ai-suggest" id="suggestBtn" onclick="suggestLCD()">AI 建議案例</button>
+      </div>
+      <div class="lcd-row">
+        <div class="lcd-num">1</div>
+        <input type="text" id="lcd1" placeholder="例：老屋翻新 — 30年公寓全室改造，省下後期維修費" />
+      </div>
+      <div class="lcd-row">
+        <div class="lcd-num">2</div>
+        <input type="text" id="lcd2" placeholder="例：商業空間設計 — 餐廳翻新提升翻桌率 40%" />
+      </div>
+      <div class="lcd-row">
+        <div class="lcd-num">3</div>
+        <input type="text" id="lcd3" placeholder="例：預售屋客變 — 格局優化讓客戶裝潢預算降低 20%" />
+      </div>
+    </div>
+    <div class="status" id="suggestStatus"></div>
+  </div>
+
+  <!-- 三級引薦 -->
+  <div class="card red-accent">
+    <div class="section-label red">三級引薦提示（選填，未填由 AI 建議）</div>
+    <div class="referral-grid">
+      <div class="referral-field">
+        <span class="ref-label ref-dream">夢幻引薦 — Biggest Target</span>
+        <input type="text" id="refDream" placeholder="例：大型建設公司、豪宅建案" />
+      </div>
+      <div class="referral-field">
+        <span class="ref-label ref-ideal">理想引薦 — Higher Value</span>
+        <input type="text" id="refIdeal" placeholder="例：換屋族、坪數 40 坪以上" />
+      </div>
+      <div class="referral-field">
+        <span class="ref-label ref-gen">一般引薦 — Low Level Entry</span>
+        <input type="text" id="refGeneral" placeholder="例：有裝修煩惱想詢價的人" />
+      </div>
+    </div>
+  </div>
+
+  <!-- 產出按鈕 -->
+  <div class="card">
+    <button type="button" class="btn-generate" id="generateBtn" onclick="generate()">產出架構 + PPT 提示詞</button>
+    <div class="status" id="mainStatus"></div>
+  </div>
+
+  <!-- 輸出區 -->
+  <div class="output-wrap" id="outputWrap">
+    <div class="divider"></div>
+    <div class="tabs">
+      <button type="button" class="tab active" role="tab" aria-selected="true" aria-controls="tab-outline" onclick="switchTab('outline')">架構預覽</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="tab-ppt" onclick="switchTab('ppt')">PPT 提示詞</button>
+    </div>
+    <div class="card" style="border-radius: 0 12px 12px 12px; margin-bottom: 0; border-top: none;">
+
+      <div class="tab-panel active" id="tab-outline">
+        <div class="meta-row" id="metaRow"></div>
+        <div id="sectionsList"></div>
+      </div>
+
+      <div class="tab-panel" id="tab-ppt">
+        <div class="ppt-intro">
+          以下提示詞可直接複製，貼入 <strong>ChatGPT</strong> 或 <strong>Gemini</strong>，讓 AI 依據你的簡報架構產出投影片大綱與口說建議。
+        </div>
+        <div class="ppt-prompt-box" id="pptPromptBox"></div>
+        <div class="copy-bar">
+          <button type="button" class="btn-copy" id="copyPptBtn" onclick="copyPpt()">複製提示詞</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+let lastParsed = null;
+let lastPptPrompt = '';
+const API_KEY_STORAGE = 'bni_gemini_key';
+
+const suggestionSchema = {
+  type: 'object',
+  properties: {
+    suggestions: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer' },
+          title: { type: 'string' },
+          service: { type: 'string' },
+          clientType: { type: 'string' }
+        },
+        required: ['id', 'title', 'service', 'clientType']
+      }
+    }
+  },
+  required: ['suggestions']
+};
+
+const outlineSchema = {
+  type: 'object',
+  properties: {
+    meta: {
+      type: 'object',
+      properties: {
+        name: { type: 'string' },
+        industry: { type: 'string' },
+        topic: { type: 'string' },
+        totalTime: { type: 'string' }
+      },
+      required: ['name', 'industry', 'topic', 'totalTime']
+    },
+    sections: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          number: { type: 'integer' },
+          name: { type: 'string' },
+          time: { type: 'string' },
+          points: { type: 'array', items: { type: 'string' } },
+          starter: { type: 'string' },
+          lcd: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'integer' },
+                title: { type: 'string' },
+                time: { type: 'string' },
+                A: { type: 'string' },
+                B: { type: 'string' },
+                C: { type: 'string' },
+                D: { type: 'string' },
+                E: { type: 'string' }
+              },
+              required: ['id', 'title', 'time', 'A', 'B', 'C', 'D', 'E']
+            }
+          },
+          referrals: {
+            type: 'object',
+            properties: {
+              dream: { type: 'string' },
+              ideal: { type: 'string' },
+              general: { type: 'string' }
+            },
+            required: ['dream', 'ideal', 'general']
+          }
+        },
+        required: ['number', 'name', 'time', 'starter']
+      }
+    }
+  },
+  required: ['meta', 'sections']
+};
+
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightboxImg').src = src;
+  lb.style.display = 'flex';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+}
+
+function toggleApiHelp() {
+  const box = document.getElementById('apiHelpBox');
+  const arrow = document.getElementById('helpArrow');
+  const toggle = document.getElementById('apiHelpToggle');
+  const isOpen = box.classList.toggle('show');
+  arrow.classList.toggle('open', isOpen);
+  toggle.setAttribute('aria-expanded', String(isOpen));
+}
+
+function toggleKey(btn) {
+  const el = document.getElementById('apiKey');
+  el.type = el.type === 'password' ? 'text' : 'password';
+  btn.textContent = el.type === 'password' ? '顯示' : '隱藏';
+}
+
+function clearSavedKey() {
+  localStorage.removeItem(API_KEY_STORAGE);
+  document.getElementById('apiKey').value = '';
+  document.getElementById('rememberKey').checked = false;
+  document.getElementById('apiKey').focus();
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const isActive = ['outline','ppt'][i] === tab;
+    t.classList.toggle('active', isActive);
+    t.setAttribute('aria-selected', String(isActive));
+  });
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function setStatus(id, type, msg) {
+  const el = document.getElementById(id);
+  el.className = 'status show ' + type;
+  el.replaceChildren();
+  if (type === 'thinking') {
+    const spinner = document.createElement('div');
+    spinner.className = 'spinner';
+    el.appendChild(spinner);
+  }
+  const text = document.createElement('span');
+  text.textContent = msg;
+  el.appendChild(text);
+}
+function clearStatus(id) {
+  const el = document.getElementById(id);
+  el.className = 'status';
+  el.replaceChildren();
+}
+
+async function callGemini(apiKey, prompt, { schema = null, thinkingBudget = 8192, timeoutMs = 90000 } = {}) {
+  const model = 'gemini-2.5-flash';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  const body = {
+    contents: [{ role: 'user', parts: [{ text: prompt }] }],
+    generationConfig: {
+      thinkingConfig: { thinkingBudget },
+      ...(schema ? {
+        responseMimeType: 'application/json',
+        responseJsonSchema: schema
+      } : {})
+    }
+  };
+  try {
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': apiKey
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `HTTP ${res.status}`);
+    }
+    const data = await res.json();
+    const text = data?.candidates?.[0]?.content?.parts?.find(p => p.text && !p.thought)?.text;
+    if (!text) throw new Error('API 未回傳有效內容');
+    return text;
+  } catch (e) {
+    if (e.name === 'AbortError') throw new Error('請求逾時，請檢查網路後再試一次');
+    throw e;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function parseJson(raw) {
+  try {
+    return JSON.parse(raw.replace(/^```json\s*/i, '').replace(/```\s*$/, '').trim());
+  } catch { return null; }
+}
+
+function getVal(id) { return document.getElementById(id).value.trim(); }
+function getApiKey() { return getVal('apiKey'); }
+
+function formatSuggestion(item) {
+  return `${item.title} — ${item.service} — 適合客戶：${item.clientType}`;
+}
+
+function validateSuggestions(parsed) {
+  const items = parsed?.suggestions;
+  if (!Array.isArray(items) || items.length !== 3) {
+    throw new Error('AI 回傳的案例數量不是 3 個');
+  }
+  items.forEach((item, index) => {
+    if (!item || typeof item !== 'object' ||
+        !['title', 'service', 'clientType'].every(key => typeof item[key] === 'string' && item[key].trim())) {
+      throw new Error(`AI 回傳的案例 ${index + 1} 欄位不完整`);
+    }
+  });
+  return items;
+}
+
+function validateOutline(parsed) {
+  if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.sections)) {
+    throw new Error('AI 回傳缺少簡報段落');
+  }
+  if (parsed.sections.length !== 7) {
+    throw new Error(`AI 回傳 ${parsed.sections.length} 個段落，應為 7 個`);
+  }
+
+  parsed.sections.forEach((section, index) => {
+    const expectedNumber = index + 1;
+    if (section?.number !== expectedNumber ||
+        typeof section.name !== 'string' ||
+        typeof section.time !== 'string' ||
+        typeof section.starter !== 'string') {
+      throw new Error(`第 ${expectedNumber} 段格式不完整`);
+    }
+    if (![4, 6].includes(expectedNumber) &&
+        (!Array.isArray(section.points) || section.points.length < 2)) {
+      throw new Error(`第 ${expectedNumber} 段缺少內容要點`);
+    }
+  });
+
+  const lcd = parsed.sections[3].lcd;
+  if (!Array.isArray(lcd) || lcd.length !== 3) {
+    throw new Error('成功案例必須包含 3 個 LCD');
+  }
+  lcd.forEach((item, index) => {
+    if (!item || !['title', 'time', 'A', 'B', 'C', 'D', 'E']
+      .every(key => typeof item[key] === 'string' && item[key].trim())) {
+      throw new Error(`LCD${index + 1} 欄位不完整`);
+    }
+  });
+
+  const referrals = parsed.sections[5].referrals;
+  if (!referrals || !['dream', 'ideal', 'general']
+    .every(key => typeof referrals[key] === 'string' && referrals[key].trim())) {
+    throw new Error('三級引薦欄位不完整');
+  }
+  return parsed;
+}
+
+async function suggestLCD() {
+  const apiKey = getApiKey();
+  if (!apiKey) { setStatus('suggestStatus', 'error', '請先填入 Gemini API Key'); return; }
+  const industry = getVal('industry');
+  const topic = getVal('topic');
+  if (!industry && !topic) { setStatus('suggestStatus', 'error', '請至少填入行業或主題'); return; }
+
+  document.getElementById('suggestBtn').disabled = true;
+  setStatus('suggestStatus', 'thinking', 'AI 正在建議案例方向...');
+
+  const prompt = `你是 BNI 富聯分會的教育協調委員。
+
+根據以下簡報者資訊，建議三個適合作為 LCD 成功案例的方向：
+姓名：${getVal('name') || '（未填）'}
+行業 / 職業：${industry || '（未填）'}
+本週主題：${topic || '（未填）'}
+目標客戶：${getVal('targetClient') || '（未填）'}
+補充背景：${getVal('extra') || '（未填）'}
+
+每個案例方向包含：
+- 案例名稱（5-10 字）
+- 對應的產品或服務
+- 適合展示的客戶類型
+
+回傳 JSON：
+{
+  "suggestions": [
+    { "id": 1, "title": "案例名稱", "service": "產品或服務", "clientType": "客戶類型" },
+    { "id": 2, "title": "案例名稱", "service": "產品或服務", "clientType": "客戶類型" },
+    { "id": 3, "title": "案例名稱", "service": "產品或服務", "clientType": "客戶類型" }
+  ]
+}
+只回傳 JSON。`;
+
+  try {
+    const raw = await callGemini(apiKey, prompt, {
+      schema: suggestionSchema,
+      thinkingBudget: 1024,
+      timeoutMs: 60000
+    });
+    const suggestions = validateSuggestions(parseJson(raw));
+    document.getElementById('lcd1').value = formatSuggestion(suggestions[0]);
+    document.getElementById('lcd2').value = formatSuggestion(suggestions[1]);
+    document.getElementById('lcd3').value = formatSuggestion(suggestions[2]);
+    clearStatus('suggestStatus');
+  } catch (e) {
+    setStatus('suggestStatus', 'error', '錯誤：' + e.message);
+  } finally {
+    document.getElementById('suggestBtn').disabled = false;
+  }
+}
+
+async function generate() {
+  const apiKey = getApiKey();
+  if (!apiKey) { setStatus('mainStatus', 'error', '請填入 Gemini API Key'); return; }
+  const topic = getVal('topic');
+  if (!topic) { setStatus('mainStatus', 'error', '「本週主題」為必填'); return; }
+
+  const name = getVal('name');
+  const industry = getVal('industry');
+  const targetClient = getVal('targetClient');
+  const extra = getVal('extra');
+  const lcd1 = getVal('lcd1') || '（未填，請 AI 自行發想）';
+  const lcd2 = getVal('lcd2') || '（未填，請 AI 自行發想）';
+  const lcd3 = getVal('lcd3') || '（未填，請 AI 自行發想）';
+  const refDream = getVal('refDream');
+  const refIdeal = getVal('refIdeal');
+  const refGeneral = getVal('refGeneral');
+
+  document.getElementById('generateBtn').disabled = true;
+  document.getElementById('outputWrap').classList.remove('show');
+  setStatus('mainStatus', 'thinking', 'AI 思考中，正在產出完整架構...');
+
+  try {
+    const raw = await callGemini(
+      apiKey,
+      buildPrompt({ name, industry, topic, targetClient, extra, lcd1, lcd2, lcd3, refDream, refIdeal, refGeneral }),
+      { schema: outlineSchema, thinkingBudget: 8192, timeoutMs: 90000 }
+    );
+    const parsed = validateOutline(parseJson(raw));
+    lastParsed = parsed;
+    lastPptPrompt = buildPptPrompt(parsed, { name, industry, topic });
+    renderOutline(parsed);
+    document.getElementById('pptPromptBox').textContent = lastPptPrompt;
+    document.getElementById('outputWrap').classList.add('show');
+    clearStatus('mainStatus');
+    document.getElementById('outputWrap').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  } catch (e) {
+    setStatus('mainStatus', 'error', '錯誤：' + e.message);
+  } finally {
+    document.getElementById('generateBtn').disabled = false;
+  }
+}
+
+function buildPrompt({ name, industry, topic, targetClient, extra, lcd1, lcd2, lcd3, refDream, refIdeal, refGeneral }) {
+  return `你是 BNI 富聯分會的教育協調委員，熟悉富聯標準的 Feature Presentation 七段式流程（總時長 10 分鐘）。
+
+簡報者資訊：
+---
+姓名：${name || '（未填）'}
+行業 / 職業：${industry || '（未填）'}
+本週主題：${topic}
+目標客戶輪廓：${targetClient || '（未填）'}
+補充背景：${extra || '無'}
+LCD 案例方向：
+  LCD1：${lcd1}
+  LCD2：${lcd2}
+  LCD3：${lcd3}
+三級引薦提示：
+  夢幻引薦：${refDream || '（請 AI 自行建議）'}
+  理想引薦：${refIdeal || '（請 AI 自行建議）'}
+  一般引薦：${refGeneral || '（請 AI 自行建議）'}
+---
+
+請產出完整的七段式主題簡報架構，每段包含 3-5 個具體要點與一句可直接使用的話術範例句（自然口語，非書面腔）。
+
+第 4 段（三個成功案例）的每個 LCD 需展開 A-E 五面向：
+A. 產品或服務
+B. 對客戶的效益或解決的問題
+C. 交易引薦對象（具體描述情境，非職稱）
+D. 業務人脈圈（上下游相關夥伴）
+E. 成功案例故事（含稀好事細節，說故事語氣，有數字或具體結果）
+
+第 6 段（三級引薦）需分三層：夢幻引薦、理想引薦、一般引薦，各給具體描述。
+
+全程繁體中文，禁止使用 emoji。
+
+回傳 JSON：
+{
+  "meta": { "name": "姓名", "industry": "行業", "topic": "主題", "totalTime": "10分鐘" },
+  "sections": [
+    { "number": 1, "name": "標題與說明", "time": "30秒", "points": ["..."], "starter": "..." },
+    { "number": 2, "name": "介紹自己", "time": "30秒", "points": ["..."], "starter": "..." },
+    { "number": 3, "name": "介紹公司", "time": "30秒", "points": ["..."], "starter": "..." },
+    {
+      "number": 4, "name": "三個成功案例", "time": "6分鐘", "starter": "...",
+      "lcd": [
+        { "id": 1, "title": "LCD1標題", "time": "2分鐘", "A": "...", "B": "...", "C": "...", "D": "...", "E": "..." },
+        { "id": 2, "title": "LCD2標題", "time": "2分鐘", "A": "...", "B": "...", "C": "...", "D": "...", "E": "..." },
+        { "id": 3, "title": "LCD3標題", "time": "2分鐘", "A": "...", "B": "...", "C": "...", "D": "...", "E": "..." }
+      ]
+    },
+    { "number": 5, "name": "開啟對話", "time": "1分鐘", "points": ["..."], "starter": "..." },
+    {
+      "number": 6, "name": "三級引薦", "time": "1分鐘", "starter": "...",
+      "referrals": { "dream": "...", "ideal": "...", "general": "..." }
+    },
+    { "number": 7, "name": "結語", "time": "30秒", "points": ["..."], "starter": "..." }
+  ]
+}
+
+只回傳 JSON，不要加任何額外說明。`;
+}
+
+function buildPptPrompt(parsed, { name, industry, topic }) {
+  const s = parsed.sections || [];
+  const sections = s.map(sec => {
+    if (sec.number === 4 && sec.lcd) {
+      const lcds = sec.lcd.map(l =>
+        `  LCD${l.id}：${l.title}（${l.time}）\n` +
+        `    A. 產品或服務：${l.A}\n` +
+        `    B. 客戶效益：${l.B}\n` +
+        `    C. 交易引薦對象：${l.C}\n` +
+        `    D. 業務人脈圈：${l.D}\n` +
+        `    E. 成功案例故事：${l.E}`
+      ).join('\n');
+      return `【${sec.number}】${sec.name}（${sec.time}）\n  開場話術：「${sec.starter}」\n${lcds}`;
+    }
+    if (sec.number === 6 && sec.referrals) {
+      return `【${sec.number}】${sec.name}（${sec.time}）\n  開場話術：「${sec.starter}」\n  夢幻引薦：${sec.referrals.dream}\n  理想引薦：${sec.referrals.ideal}\n  一般引薦：${sec.referrals.general}`;
+    }
+    const pts = (sec.points || []).map(p => `  - ${p}`).join('\n');
+    return `【${sec.number}】${sec.name}（${sec.time}）\n  開場話術：「${sec.starter}」\n${pts}`;
+  }).join('\n\n');
+
+  return `請根據以下 BNI 主題簡報架構，協助我製作一份投影片大綱。
+
+簡報者：${name || '（未填）'} | 行業：${industry || '（未填）'} | 主題：${topic}
+總時長：10 分鐘 | 共 7 個段落
+
+---
+架構內容：
+
+${sections}
+
+---
+
+請依上述架構，完成以下工作：
+
+1. 為每個段落設計 1-2 張投影片，說明每張投影片的標題與核心視覺重點
+2. LCD 的 E（成功案例故事）設計成故事型投影片，建議用「情境 → 挑戰 → 解法 → 結果」四格結構
+3. 三級引薦段落建議製作成三角形或三欄式版面
+4. 每張投影片標注建議的口說重點（1-2 句，給簡報者參考）
+5. 最後列出完整的投影片清單（共幾張、每張標題）
+
+風格要求：
+- 簡潔專業，適合 BNI 商務場合
+- 每張投影片文字量不超過 30 字
+- 視覺建議可描述版面配置（例如：左圖右文、全版圖、三欄）
+
+請用繁體中文回覆。`;
+}
+
+function renderOutline(parsed) {
+  const meta = parsed.meta || {};
+  document.getElementById('metaRow').innerHTML = [
+    meta.name ? `<span class="meta-chip"><strong>${esc(meta.name)}</strong></span>` : '',
+    meta.industry ? `<span class="meta-chip">${esc(meta.industry)}</span>` : '',
+    meta.topic ? `<span class="meta-chip">主題：<strong>${esc(meta.topic)}</strong></span>` : '',
+    `<span class="meta-chip">總時長：<strong>10 分鐘</strong></span>`
+  ].filter(Boolean).join('');
+  document.getElementById('sectionsList').innerHTML = (parsed.sections || []).map(renderSection).join('');
+}
+
+function renderSection(s) {
+  let body = '';
+  if (s.starter) body += `<div class="starter-quote">"${esc(s.starter)}"</div>`;
+
+  if (s.number === 4 && s.lcd) {
+    body += `<div class="lcd-blocks">${s.lcd.map(l => `
+      <div class="lcd-block">
+        <div class="lcd-block-title"><span class="lcd-tag">LCD${l.id}</span>${esc(l.title)} — ${esc(l.time)}</div>
+        <div class="lcd-abcde">
+          ${['A','B','C','D','E'].map(k => `
+            <div class="lcd-item">
+              <span class="lcd-item-key">${k}.</span>
+              <span class="lcd-item-val">${esc(l[k] || '')}</span>
+            </div>`).join('')}
+        </div>
+      </div>`).join('')}</div>`;
+  } else if (s.number === 6 && s.referrals) {
+    const r = s.referrals;
+    body += `<div class="referral-tiers">
+      <div class="referral-tier"><span class="tier-label tier-dream">夢幻</span><span class="tier-content">${esc(r.dream)}</span></div>
+      <div class="referral-tier"><span class="tier-label tier-ideal">理想</span><span class="tier-content">${esc(r.ideal)}</span></div>
+      <div class="referral-tier"><span class="tier-label tier-gen">一般</span><span class="tier-content">${esc(r.general)}</span></div>
+    </div>`;
+  } else if (s.points?.length) {
+    body += `<div class="points">${s.points.map(p =>
+      `<div class="point"><span class="point-dot">&#9632;</span><span>${esc(p)}</span></div>`
+    ).join('')}</div>`;
+  }
+
+  return `<div class="section-block">
+    <div class="section-head">
+      <div class="s-num">${s.number}</div>
+      <div class="s-title">${esc(s.name)}</div>
+      <div class="s-time">${esc(s.time)}</div>
+    </div>
+    <div class="section-body">${body}</div>
+  </div>`;
+}
+
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function copyPpt() {
+  if (!lastPptPrompt) return;
+  const btn = document.getElementById('copyPptBtn');
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(lastPptPrompt);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = lastPptPrompt;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      if (!document.execCommand('copy')) throw new Error('瀏覽器不允許複製');
+      textarea.remove();
+    }
+    btn.textContent = '已複製';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '複製提示詞'; btn.classList.remove('copied'); }, 2000);
+  } catch {
+    btn.textContent = '複製失敗，請手動選取';
+    setTimeout(() => { btn.textContent = '複製提示詞'; }, 2500);
+  }
+}
+
+(function() {
+  const keyInput = document.getElementById('apiKey');
+  const rememberKey = document.getElementById('rememberKey');
+  const saved = localStorage.getItem(API_KEY_STORAGE);
+  if (saved) {
+    keyInput.value = saved;
+    rememberKey.checked = true;
+  }
+  keyInput.addEventListener('input', function() {
+    if (rememberKey.checked) localStorage.setItem(API_KEY_STORAGE, this.value);
+  });
+  rememberKey.addEventListener('change', function() {
+    if (this.checked && keyInput.value) {
+      localStorage.setItem(API_KEY_STORAGE, keyInput.value);
+    } else {
+      localStorage.removeItem(API_KEY_STORAGE);
+    }
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && document.getElementById('lightbox').style.display === 'flex') {
+      closeLightbox();
+    }
+  });
+})();
+</script>
+</body>
+</html>
