@@ -1652,49 +1652,67 @@ function backToStep2() {
 /* ── Build PPT prompt from slideState ── */
 function buildPptPromptFromSlides() {
   const meta = editState.meta || {};
+  const name = meta.name || '（未填）';
+  const industry = meta.industry || '（未填）';
+  const topic = meta.topic || '（未填）';
+  const total = slideState.length;
+
   const slideText = slideState.map((slide, idx) => {
     const num = idx + 1;
     if (slide.type === 'normal') {
-      const pts = (slide.points||[]).filter(Boolean).map(p => `  - ${p}`).join('\n');
-      return `【投影片 ${num}】${slide.sectionName}（${slide.sectionTime}）\n  開場話術：「${slide.starter}」\n${pts}`;
+      const pts = (slide.points||[]).filter(Boolean).map(p => `- ${p}`).join('\n');
+      return `## 投影片 ${num} — ${slide.sectionName}（${slide.sectionTime}）\n**開場話術：**「${slide.starter}」\n**要點：**\n${pts}`;
     } else if (slide.type === 'lcd-abcd') {
-      const items = Object.entries(slide.items||{}).map(([k,v]) => `  ${k}. ${LCD_LABELS[k]}：${v}`).join('\n');
-      return `【投影片 ${num}】LCD${slide.lcdId} ${slide.lcdTitle}\n${items}`;
+      const items = Object.entries(slide.items||{}).map(([k,v]) => `**${k}. ${LCD_LABELS[k]}：** ${v}`).join('\n');
+      return `## 投影片 ${num} — LCD${slide.lcdId} ${slide.lcdTitle}\n${items}`;
     } else if (slide.type === 'lcd-story') {
       const s = slide.story || {};
-      return `【投影片 ${num}】LCD${slide.lcdId} ${slide.lcdTitle} — 成功案例故事\n  情境：${s.scene||''}\n  挑戰：${s.challenge||''}\n  解法：${s.solution||''}\n  結果：${s.result||''}`;
+      return `## 投影片 ${num} — LCD${slide.lcdId} ${slide.lcdTitle} 成功案例故事\n| 情境 | 挑戰 | 解法 | 結果 |\n|------|------|------|------|\n| ${s.scene||''} | ${s.challenge||''} | ${s.solution||''} | ${s.result||''} |`;
     } else if (slide.type === 'referral') {
-      return `【投影片 ${num}】三級引薦\n  開場話術：「${slide.starter}」\n  夢幻引薦：${slide.dream}\n  理想引薦：${slide.ideal}\n  一般引薦：${slide.general}`;
+      return `## 投影片 ${num} — 三級引薦（${slide.sectionTime}）\n**開場話術：**「${slide.starter}」\n| 層級 | 對象描述 |\n|------|----------|\n| 夢幻引薦（Biggest Target） | ${slide.dream} |\n| 理想引薦（Higher Value） | ${slide.ideal} |\n| 一般引薦（Low Level Entry） | ${slide.general} |`;
     }
     return '';
-  }).filter(Boolean).join('\n\n');
+  }).filter(Boolean).join('\n\n---\n\n');
 
-  return `請根據以下 BNI 主題簡報架構，協助我製作一份投影片大綱。
-
-簡報者：${meta.name||'（未填）'} | 行業：${meta.industry||'（未填）'} | 主題：${meta.topic||'（未填）'}
-總時長：10 分鐘 | 共 ${slideState.length} 張投影片
+  return `# 角色設定（Role）
+你現在是一位資深簡報設計顧問，同時熟悉 BNI 商務引薦文化。
+你擅長將口語化的簡報架構，轉化為清晰、專業、適合商務場合的投影片內容。
 
 ---
-投影片內容：
+
+# 背景資訊（Context）
+這是一份 BNI 富聯分會主題簡報（Feature Presentation）的投影片規劃需求。
+
+- 簡報者：${name} | 行業：${industry}
+- 本週主題：${topic}
+- 總時長：10 分鐘 | 共 ${total} 張投影片
+- 場合：BNI 週會，聽眾為同分會成員，目的是讓成員了解簡報者的服務並主動引薦
+
+---
+
+# 具體任務（Task）
+請根據下方每張投影片的內容，依序完成：
+
+1. 設計每張投影片的**版面配置**（例如：左圖右文、三欄、全版標題）
+2. 列出每張投影片的**視覺重點**（1-3 個關鍵字或短句）
+3. 撰寫每張投影片的**口說提示**（給簡報者參考，1-2 句，口語自然）
+4. 最後輸出完整的**投影片清單**（格式：\`投影片 N｜標題｜預估時間\`）
+
+---
+
+# 投影片內容
 
 ${slideText}
 
 ---
 
-請依上述架構，完成以下工作：
-
-1. 為每張投影片設計視覺版面配置（標題、核心重點、建議圖表或圖示）
-2. LCD 成功案例故事投影片採「情境 → 挑戰 → 解法 → 結果」四格版面
-3. 三級引薦建議製作成三欄或三角形版面
-4. 每張投影片標注建議的口說重點（1-2 句）
-5. 最後列出完整的投影片清單
-
-風格要求：
-- 簡潔專業，適合 BNI 商務場合
-- 每張投影片文字量不超過 30 字
-- 視覺建議可描述版面配置（例如：左圖右文、全版圖、三欄）
-
-請用繁體中文回覆。`;
+# 格式要求（Format）
+- 每張投影片輸出格式固定為：**版面建議 / 視覺重點 / 口說提示**
+- 全程繁體中文，禁止使用 Emoji
+- 每張投影片建議文字量不超過 30 字
+- LCD 成功案例故事投影片版面採「情境 → 挑戰 → 解法 → 結果」四格
+- 三級引薦投影片版面採三欄或三角形配置
+- 最後附完整投影片清單（格式：\`投影片 N｜標題｜預估時間\`）`;
 }
 
 function esc(str) {
